@@ -23,7 +23,7 @@ export default async function TreatmentsPage({ params }: PageProps<"/patients/[i
   return (
     <SectionCard
       title="Treatment history"
-      description={rows.length ? `${rows.length} treatments · ${formatPeso(total)} total fees` : undefined}
+      description={rows.length ? `${rows.length} treatment${rows.length === 1 ? "" : "s"} · ${formatPeso(total)} total fees` : undefined}
       action={
         <TreatmentDialog patientId={patient.id} workplaces={options} defaultWorkplaceId={current?.id ?? null} today={today} />
       }

@@ -4,9 +4,10 @@ import Link from "next/link";
 import { InitialsAvatar } from "@/components/app/initials-avatar";
 import { EmptyState, PageHeader } from "@/components/app/page-header";
 import { Button } from "@/components/ui/button";
-import { ageOn, todayManila } from "@/lib/format";
+import { ageOn, formatPeso, todayManila } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { requireUser } from "@/server/auth";
+import { balancesFor } from "@/server/data/billing";
 import { fullName, listPatients } from "@/server/data/patients";
 import { PatientSearchInput } from "./patient-search-input";
 
@@ -20,6 +21,7 @@ export default async function PatientsPage({ searchParams }: PageProps<"/patient
   const page = Number(typeof sp.page === "string" ? sp.page : 1) || 1;
   const { rows, total, pageCount } = await listPatients(actor, { q, page, archived });
   const today = todayManila();
+  const balances = await balancesFor(actor, rows.map((r) => r.id));
 
   const href = (params: Record<string, string | number | undefined>) => {
     const u = new URLSearchParams();
@@ -89,10 +91,11 @@ export default async function PatientsPage({ searchParams }: PageProps<"/patient
           )
         ) : (
           <ul className="divide-y">
-            <li className="hidden grid-cols-[minmax(0,2.2fr)_1fr_1.2fr_24px] gap-4 bg-surface-2 px-5 py-2.5 text-xs font-medium text-muted-foreground md:grid">
+            <li className="hidden grid-cols-[minmax(0,2.2fr)_1fr_1.2fr_110px_24px] gap-4 bg-surface-2 px-5 py-2.5 text-xs font-medium text-muted-foreground md:grid">
               <span>Patient</span>
               <span>Age · Sex</span>
               <span>Mobile</span>
+              <span className="text-right">Balance</span>
               <span />
             </li>
             {rows.map((p) => {
@@ -105,7 +108,7 @@ export default async function PatientsPage({ searchParams }: PageProps<"/patient
                 <li key={p.id}>
                   <Link
                     href={`/patients/${p.id}`}
-                    className="grid grid-cols-[minmax(0,1fr)_24px] items-center gap-4 px-5 py-3 hover:bg-hover md:grid-cols-[minmax(0,2.2fr)_1fr_1.2fr_24px]"
+                    className="grid grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-4 px-5 py-3 hover:bg-hover md:grid-cols-[minmax(0,2.2fr)_1fr_1.2fr_110px_24px]"
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <InitialsAvatar name={name} />
@@ -127,6 +130,13 @@ export default async function PatientsPage({ searchParams }: PageProps<"/patient
                     </span>
                     <span className="tabular hidden text-sm text-secondary-foreground md:block">{ageSex || "—"}</span>
                     <span className="tabular hidden text-sm text-secondary-foreground md:block">{p.phone ?? "—"}</span>
+                    <span className="tabular text-right text-sm">
+                      {(balances.get(p.id) ?? 0) > 0 ? (
+                        <span className="font-medium text-destructive">{formatPeso(balances.get(p.id) ?? 0)}</span>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </span>
                     <ChevronRightIcon className="size-4 text-muted-foreground" aria-hidden="true" />
                   </Link>
                 </li>

@@ -2,14 +2,17 @@ import { Archive, ChevronLeft, Mail, Phone, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { InitialsAvatar } from "@/components/app/initials-avatar";
 import { Badge } from "@/components/ui/badge";
-import { ageOn, todayManila } from "@/lib/format";
+import { ageOn, formatPeso, todayManila } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import { patientBalance } from "@/server/data/billing";
 import { fullName } from "@/server/data/patients";
 import { loadPatient } from "../load-patient";
 import { type PatientTab, PatientTabs } from "./patient-tabs";
 
 export default async function PatientLayout({ children, params }: LayoutProps<"/patients/[id]">) {
   const { id } = await params;
-  const { patient } = await loadPatient(id);
+  const { actor, patient } = await loadPatient(id);
+  const { balance } = await patientBalance(actor, id);
   const name = fullName(patient);
   const age = patient.birthdate ? ageOn(patient.birthdate, todayManila()) : null;
   const alerts = [patient.allergies && `Allergies: ${patient.allergies}`, patient.medicalConditions]
@@ -22,6 +25,7 @@ export default async function PatientLayout({ children, params }: LayoutProps<"/
     { segment: "treatments", label: "Treatments" },
     { segment: "files", label: "X-rays & files" },
     { segment: "appointments", label: "Appointments" },
+    { segment: "billing", label: "Billing" },
   ];
 
   return (
@@ -66,6 +70,12 @@ export default async function PatientLayout({ children, params }: LayoutProps<"/
                 {patient.email}
               </a>
             )}
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-xs font-medium text-muted-foreground">Balance</div>
+          <div className={cn("tabular text-lg font-semibold text-heading", balance > 0 && "text-destructive")}>
+            {formatPeso(Math.max(balance, 0))}
           </div>
         </div>
       </section>

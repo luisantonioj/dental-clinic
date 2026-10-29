@@ -263,6 +263,48 @@ export const appointments = pgTable(
   (t) => [index().on(t.dentistId, t.startsAt), index().on(t.patientId, t.startsAt), index().on(t.status, t.startsAt)],
 );
 
+// ── Billing ───────────────────────────────────────────────────────────────────
+
+export const PAYMENT_METHODS = ["cash", "gcash", "maya", "card", "bank"] as const;
+export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
+export const COLLECTORS = ["me", "clinic"] as const;
+export type Collector = (typeof COLLECTORS)[number];
+
+/** Money received from a patient. Corrections void a payment (kept for history). */
+export const payments = pgTable(
+  "payments",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    patientId: text()
+      .notNull()
+      .references(() => patients.id),
+    workplaceId: text()
+      .notNull()
+      .references(() => workplaces.id),
+    /** Per-dentist running number for acknowledgment receipts (AR-0001). */
+    receiptSeq: integer().notNull(),
+    date: date({ mode: "string" }).notNull(),
+    /** Centavos. */
+    amount: integer().notNull(),
+    method: text().$type<PaymentMethod>().notNull(),
+    reference: text(),
+    /** Who received the money: the dentist herself, or the partner clinic's front desk. */
+    collectedBy: text().$type<Collector>().notNull().default("me"),
+    notes: text(),
+    voidedAt: timestamp({ withTimezone: true }),
+    voidReason: text(),
+    ...timestamps,
+  },
+  (t) => [
+    uniqueIndex().on(t.dentistId, t.receiptSeq),
+    index().on(t.patientId, t.date),
+    index().on(t.dentistId, t.workplaceId, t.date),
+  ],
+);
+
 // ── Files (X-rays, photos, documents) ─────────────────────────────────────────
 
 export const ATTACHMENT_KINDS = ["xray", "photo", "document"] as const;

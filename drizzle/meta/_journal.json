@@ -57,6 +57,13 @@
       "when": 1793288003140,
       "tag": "0007_appointments",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793288493147,
+      "tag": "0008_payments",
+      "breakpoints": true
     }
   ]
 }

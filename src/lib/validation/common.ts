@@ -60,8 +60,8 @@ export const pesoAmount = (label = "Amount", { allowZero = false } = {}) =>
 export const optionalPesoAmount = (label = "Amount") =>
   z
     .string()
-    .trim()
-    .transform((v) => v.replace(/[₱,\s]/g, "") || "0")
+    .optional()
+    .transform((v) => (v ?? "").replace(/[₱,\s]/g, "") || "0")
     .pipe(z.string().regex(/^\d+(\.\d{1,2})?$/, `${label} must be a peso amount`))
     .transform((v) => Math.round(Number(v) * 100));
 
