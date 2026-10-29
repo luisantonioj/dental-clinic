@@ -305,6 +305,56 @@ export const payments = pgTable(
   ],
 );
 
+// ── Earnings ──────────────────────────────────────────────────────────────────
+
+/** Money a partner clinic paid the dentist for her share. */
+export const payouts = pgTable(
+  "payouts",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    workplaceId: text()
+      .notNull()
+      .references(() => workplaces.id),
+    date: date({ mode: "string" }).notNull(),
+    /** The period the payout covers (optional). */
+    periodStart: date({ mode: "string" }),
+    periodEnd: date({ mode: "string" }),
+    /** Centavos. */
+    amount: integer().notNull(),
+    notes: text(),
+    voidedAt: timestamp({ withTimezone: true }),
+    ...timestamps,
+  },
+  (t) => [index().on(t.dentistId, t.workplaceId, t.date)],
+);
+
+export const EXPENSE_CATEGORIES = ["supplies", "lab", "rent", "utilities", "equipment", "salaries", "other"] as const;
+export type ExpenseCategory = (typeof EXPENSE_CATEGORIES)[number];
+
+export const expenses = pgTable(
+  "expenses",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    workplaceId: text()
+      .notNull()
+      .references(() => workplaces.id),
+    date: date({ mode: "string" }).notNull(),
+    category: text().$type<ExpenseCategory>().notNull(),
+    /** Centavos. */
+    amount: integer().notNull(),
+    notes: text(),
+    voidedAt: timestamp({ withTimezone: true }),
+    ...timestamps,
+  },
+  (t) => [index().on(t.dentistId, t.workplaceId, t.date)],
+);
+
 // ── Files (X-rays, photos, documents) ─────────────────────────────────────────
 
 export const ATTACHMENT_KINDS = ["xray", "photo", "document"] as const;

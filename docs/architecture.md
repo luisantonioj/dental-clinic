@@ -84,11 +84,10 @@ All IDs are `text` UUIDs (`crypto.randomUUID()`). Every domain table has `dentis
 **Derived values (not stored):**
 - Patient balance = `sum(treatments.fee) − sum(payments.amount)`.
 - Stock on hand = `sum(stock_movements.qty)` per item.
-- Earnings per workplace and period:
-  - `gross = sum(fee)`, `collected = sum(payments)`, `labFees = sum(lab_fee)`
-  - `base = collected − (deduct_lab_fees ? labFees : 0)`, `share = base × commission_pct / 100`
-  - Partner clinic: `owedByClinic = share − collectedByMe − payouts` (what she collected herself is already in her hands; a negative value means she owes the clinic).
-  - Own clinic: `net = collected − expenses`.
+- Earnings per workplace and period (`src/lib/earnings.ts`, tested in `earnings.test.ts`). Fees and lab fees count by treatment date, collections by payment date:
+  - `gross = sum(fee)`, `collected = sum(non-voided payments)`, `labFees = sum(lab_fee)`
+  - Partner clinic: `base = max(0, collected − (deduct_lab_fees ? labFees : 0))`, `share = base × commission_pct / 100`, `owedByClinic = share − collectedByMe − payouts` (what she collected herself is already in her hands; negative means she owes the clinic), `net = share − expenses`.
+  - Own clinic: `share = collected`, `net = collected − labFees − expenses`.
 
 ## APIs and services
 
