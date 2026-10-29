@@ -355,6 +355,57 @@ export const expenses = pgTable(
   (t) => [index().on(t.dentistId, t.workplaceId, t.date)],
 );
 
+// ── Inventory ─────────────────────────────────────────────────────────────────
+
+export const inventoryItems = pgTable(
+  "inventory_items",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    workplaceId: text()
+      .notNull()
+      .references(() => workplaces.id),
+    name: text().notNull(),
+    category: text(),
+    /** e.g. pc, box, pack, ml */
+    unit: text().notNull().default("pc"),
+    /** Show a low-stock alert at or below this quantity. */
+    reorderLevel: integer().notNull().default(0),
+    /** Centavos per unit (optional, for valuing stock). */
+    unitCost: integer(),
+    active: boolean().notNull().default(true),
+    ...timestamps,
+  },
+  (t) => [index().on(t.dentistId, t.workplaceId)],
+);
+
+export const STOCK_MOVEMENT_TYPES = ["restock", "use", "adjust"] as const;
+export type StockMovementType = (typeof STOCK_MOVEMENT_TYPES)[number];
+
+/** Stock on hand = sum(qty). Movements are never edited or deleted. */
+export const stockMovements = pgTable(
+  "stock_movements",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    itemId: text()
+      .notNull()
+      .references(() => inventoryItems.id),
+    date: date({ mode: "string" }).notNull(),
+    /** Signed: + restock, − used, ± adjustment after a count. */
+    qty: integer().notNull(),
+    type: text().$type<StockMovementType>().notNull(),
+    reason: text(),
+    treatmentId: text().references(() => treatments.id),
+    ...timestamps,
+  },
+  (t) => [index().on(t.itemId, t.date)],
+);
+
 // ── Files (X-rays, photos, documents) ─────────────────────────────────────────
 
 export const ATTACHMENT_KINDS = ["xray", "photo", "document"] as const;
