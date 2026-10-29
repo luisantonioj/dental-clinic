@@ -12,6 +12,8 @@ export default defineConfig({
     setupFiles: ["tests/support/setup-db.ts"],
     env: { BETTER_AUTH_SECRET: "test-secret-test-secret-test-secret", PGLITE_DATA_DIR: "memory://" },
     pool: "forks",
+    // Each worker runs an embedded Postgres (WASM); cap them to keep memory in check.
+    maxWorkers: 3,
     testTimeout: 30_000,
     hookTimeout: 60_000,
   },
