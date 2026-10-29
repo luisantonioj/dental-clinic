@@ -1,0 +1,227 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Dark mode is driven by next-themes setting data-theme="dark" on <html>. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-heading: var(--heading);
+  --color-surface-2: var(--surface-2);
+  --color-hover: var(--hover);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --color-sidebar: var(--card);
+  --color-sidebar-foreground: var(--foreground);
+  --color-sidebar-primary: var(--primary);
+  --color-sidebar-primary-foreground: var(--primary-foreground);
+  --color-sidebar-accent: var(--primary-soft);
+  --color-sidebar-accent-foreground: var(--primary);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3);
+
+  --shadow-card: var(--shadow-card);
+}
+
+/* Design tokens: see docs/design.md. Light mode (default). */
+:root {
+  --radius: 0.5rem;
+
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --heading: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --surface-2: #f1f5f9;
+  --hover: #f1f5f9;
+
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --primary-soft: rgb(13 148 136 / 0.1);
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9;
+  --secondary-foreground: #334155;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --input: #cbd5e1;
+  --ring: #0d9488;
+
+  --success: #16a34a;
+  --success-soft: rgb(22 163 74 / 0.12);
+  --warning: #d97706;
+  --warning-soft: rgb(217 119 6 / 0.12);
+  --destructive: #dc2626;
+  --destructive-soft: rgb(220 38 38 / 0.09);
+  --info: #2563eb;
+  --info-soft: rgb(37 99 235 / 0.1);
+
+  /* Workplace palette (calendar, tags, switcher dot) */
+  --wp-indigo: #6366f1;
+  --wp-sky: #0ea5e9;
+  --wp-violet: #8b5cf6;
+  --wp-amber: #f59e0b;
+  --wp-rose: #f43f5e;
+  --wp-emerald: #10b981;
+
+  /* Tooth chart conditions */
+  --tooth-caries: #dc2626;
+  --tooth-filling: #2563eb;
+  --tooth-crown: #7c3aed;
+  --tooth-rct: #d97706;
+  --tooth-other: #0d9488;
+
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 2px 8px rgb(15 23 42 / 0.04);
+}
+
+/* Dark mode: Discord-like greys, never pure black. */
+[data-theme="dark"] {
+  --background: #313338;
+  --foreground: #dbdee1;
+  --heading: #f2f3f5;
+  --card: #2b2d31;
+  --card-foreground: #dbdee1;
+  --popover: #2b2d31;
+  --popover-foreground: #dbdee1;
+  --surface-2: #1e1f22;
+  --hover: #35373c;
+
+  --primary: #2dd4bf;
+  --primary-hover: #5eead4;
+  --primary-soft: rgb(45 212 191 / 0.14);
+  --primary-foreground: #042f2e;
+
+  --secondary: #404249;
+  --secondary-foreground: #b5bac1;
+  --muted: #1e1f22;
+  --muted-foreground: #949ba4;
+  --accent: #35373c;
+  --accent-foreground: #f2f3f5;
+
+  --border: #3f4147;
+  --border-strong: #4e5058;
+  --input: #4e5058;
+  --ring: #2dd4bf;
+
+  --success: #4ade80;
+  --success-soft: rgb(74 222 128 / 0.14);
+  --warning: #fbbf24;
+  --warning-soft: rgb(251 191 36 / 0.14);
+  --destructive: #f87171;
+  --destructive-soft: rgb(248 113 113 / 0.14);
+  --info: #60a5fa;
+  --info-soft: rgb(96 165 250 / 0.14);
+
+  --wp-indigo: #818cf8;
+  --wp-sky: #38bdf8;
+  --wp-violet: #a78bfa;
+  --wp-amber: #fbbf24;
+  --wp-rose: #fb7185;
+  --wp-emerald: #34d399;
+
+  --tooth-caries: #f87171;
+  --tooth-filling: #60a5fa;
+  --tooth-crown: #a78bfa;
+  --tooth-rct: #fbbf24;
+  --tooth-other: #2dd4bf;
+
+  --shadow-card: 0 1px 0 rgb(0 0 0 / 0.18);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply text-heading;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}
