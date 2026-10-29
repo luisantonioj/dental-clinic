@@ -51,6 +51,25 @@ pnpm dev                        # http://localhost:3000
 | `CRON_SECRET` | Any long random string; Vercel sends it to the cron route |
 | `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME` | Used once by `pnpm db:seed` |
 
+### Cloudflare R2 (X-rays and files)
+
+1. Cloudflare dashboard → R2 → **Create bucket** (e.g. `dentalkeep-files`). Leave public access **off**.
+2. R2 → **Manage API tokens** → create a token with **Object Read & Write**, scoped to that bucket only. Copy the access key ID and secret into `.env.local`, and your account ID into `R2_ACCOUNT_ID`.
+3. Bucket → Settings → **CORS policy**, so the browser can upload directly:
+
+   ```json
+   [
+     {
+       "AllowedOrigins": ["http://localhost:3000", "https://yourdomain.com"],
+       "AllowedMethods": ["PUT", "GET"],
+       "AllowedHeaders": ["Content-Type"],
+       "MaxAgeSeconds": 3600
+     }
+   ]
+   ```
+
+Without R2 settings, development stores files in `./.uploads` (gitignored) so you can try the feature. Production refuses to start uploads until R2 is configured.
+
 ## Scripts
 
 | Script | What it does |

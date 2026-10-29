@@ -49,3 +49,6 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 /.claude/
+
+# local file storage used when R2 is not configured (dev only)
+/.uploads

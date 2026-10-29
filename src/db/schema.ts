@@ -234,6 +234,38 @@ export const chartEntries = pgTable(
   (t) => [index().on(t.patientId, t.tooth)],
 );
 
+// ── Files (X-rays, photos, documents) ─────────────────────────────────────────
+
+export const ATTACHMENT_KINDS = ["xray", "photo", "document"] as const;
+export type AttachmentKind = (typeof ATTACHMENT_KINDS)[number];
+
+/** Files live in private storage (R2); only the key and metadata are here. */
+export const attachments = pgTable(
+  "attachments",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    patientId: text()
+      .notNull()
+      .references(() => patients.id),
+    kind: text().$type<AttachmentKind>().notNull(),
+    /** dentistId/patientId/uuid.ext — never shown to users. */
+    storageKey: text().notNull().unique(),
+    filename: text().notNull(),
+    mime: text().notNull(),
+    size: integer().notNull(),
+    takenAt: date({ mode: "string" }),
+    notes: text(),
+    /** False until the browser finishes uploading and the server confirms it. */
+    uploaded: boolean().notNull().default(false),
+    removedAt: timestamp({ withTimezone: true }),
+    ...timestamps,
+  },
+  (t) => [index().on(t.patientId, t.createdAt)],
+);
+
 // ── Audit ─────────────────────────────────────────────────────────────────────
 
 export const auditLog = pgTable(

@@ -20,6 +20,7 @@ export default async function PatientLayout({ children, params }: LayoutProps<"/
     { segment: "", label: "Overview" },
     { segment: "chart", label: "Dental chart" },
     { segment: "treatments", label: "Treatments" },
+    { segment: "files", label: "X-rays & files" },
   ];
 
   return (
