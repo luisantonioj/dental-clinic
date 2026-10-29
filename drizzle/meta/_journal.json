@@ -36,6 +36,13 @@
       "when": 1793286831104,
       "tag": "0004_patients",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793287295424,
+      "tag": "0005_treatments_chart",
+      "breakpoints": true
     }
   ]
 }

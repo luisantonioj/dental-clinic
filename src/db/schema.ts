@@ -161,6 +161,79 @@ export const patients = pgTable(
   ],
 );
 
+// ── Treatments & dental chart ─────────────────────────────────────────────────
+
+/** Procedures done. The fee adds to the patient balance and to earnings for that workplace. */
+export const treatments = pgTable(
+  "treatments",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    patientId: text()
+      .notNull()
+      .references(() => patients.id),
+    workplaceId: text()
+      .notNull()
+      .references(() => workplaces.id),
+    date: date({ mode: "string" }).notNull(),
+    /** FDI tooth numbers, e.g. {16, 26}. Empty for whole-mouth work like cleaning. */
+    teeth: integer().array().notNull().default(sql`'{}'::integer[]`),
+    procedure: text().notNull(),
+    notes: text(),
+    /** Centavos. */
+    fee: integer().notNull().default(0),
+    /** Centavos paid to the dental lab (crowns, dentures). */
+    labFee: integer().notNull().default(0),
+    ...timestamps,
+  },
+  (t) => [index().on(t.patientId, t.date), index().on(t.dentistId, t.workplaceId, t.date)],
+);
+
+export const CHART_CONDITIONS = [
+  "caries",
+  "filling",
+  "crown",
+  "rct",
+  "missing",
+  "extraction",
+  "implant",
+  "bridge",
+  "sealant",
+  "other",
+] as const;
+export type ChartCondition = (typeof CHART_CONDITIONS)[number];
+export const CHART_STATUSES = ["existing", "planned", "done"] as const;
+export type ChartStatus = (typeof CHART_STATUSES)[number];
+export const SURFACES = ["M", "D", "B", "L", "O"] as const;
+export type Surface = (typeof SURFACES)[number];
+
+/** Odontogram entries: a condition on a tooth (optionally on specific surfaces). */
+export const chartEntries = pgTable(
+  "chart_entries",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    patientId: text()
+      .notNull()
+      .references(() => patients.id),
+    /** FDI number: 11–48 adult, 51–85 primary. */
+    tooth: integer().notNull(),
+    surfaces: text().$type<Surface>().array().notNull().default(sql`'{}'::text[]`),
+    condition: text().$type<ChartCondition>().notNull(),
+    status: text().$type<ChartStatus>().notNull().default("existing"),
+    date: date({ mode: "string" }).notNull(),
+    notes: text(),
+    /** Set when the entry was removed (kept for history). */
+    removedAt: timestamp({ withTimezone: true }),
+    ...timestamps,
+  },
+  (t) => [index().on(t.patientId, t.tooth)],
+);
+
 // ── Audit ─────────────────────────────────────────────────────────────────────
 
 export const auditLog = pgTable(

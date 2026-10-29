@@ -16,7 +16,10 @@ export default async function PatientLayout({ children, params }: LayoutProps<"/
     .filter(Boolean)
     .join(" · ");
 
-  const tabs: PatientTab[] = [{ segment: "", label: "Overview" }];
+  const tabs: PatientTab[] = [
+    { segment: "", label: "Overview" },
+    { segment: "treatments", label: "Treatments" },
+  ];
 
   return (
     <>
