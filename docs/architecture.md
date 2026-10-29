@@ -30,7 +30,8 @@ src/
       appointments/             day/week calendar
       earnings/                 report, payouts, expenses
       inventory/                items, movements
-      settings/                 profile, workplaces, reminders, password, export
+      receipts/[id]/            printable acknowledgment receipt
+      settings/                 profile, workplaces, reminders, password, export, activity log
       admin/users/              accounts (admin only)
     api/
       auth/[...all]/route.ts    Better Auth handler
@@ -106,7 +107,8 @@ All IDs are `text` UUIDs (`crypto.randomUUID()`). Every domain table has `dentis
 | `POST /api/files/upload` | Ownership check + validation → `{ attachmentId, url }` presigned PUT |
 | `GET /api/files/[id]` | Ownership check → 302 to a presigned GET |
 | `GET /api/cron/reminders` | Requires `Authorization: Bearer $CRON_SECRET`. Sends due reminders |
-| `GET /api/export/patients`, `/api/export/earnings` | CSV for the session dentist |
+| `PUT /api/files/[id]/content` | Development only: receives the file body when R2 isn't configured (stored in `./.uploads`) |
+| `GET /api/export/patients`, `/api/export/earnings?month=YYYY-MM` | CSV for the session dentist (patient exports are written to the audit log) |
 
 ### Services
 - **Better Auth**: email/password, Drizzle adapter, `admin` plugin (roles, ban, create user), sign-up disabled for the public. Password reset via Resend.

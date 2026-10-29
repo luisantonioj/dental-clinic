@@ -103,9 +103,46 @@ src/
     index.ts      Neon + Drizzle client
   lib/            Zod schemas, money/date formatting (en-PH, Asia/Manila)
 drizzle/          SQL migrations
+e2e/              Playwright end-to-end test
+scripts/          migrate and seed scripts
 docs/             context, architecture, design
 mockup/           clickable HTML mockup used as the visual reference
 ```
+
+## Deployment (Vercel + Neon + Resend + R2)
+
+1. **Neon:** create a project (Singapore is the closest region to the Philippines). Copy the **pooled** connection string.
+2. **Migrate and seed** from your computer against Neon:
+
+   ```bash
+   DATABASE_URL="postgres://…" pnpm db:migrate
+   ```
+
+   ```bash
+   DATABASE_URL="postgres://…" SEED_ADMIN_EMAIL=you@yourdomain.com SEED_ADMIN_PASSWORD="…" pnpm db:seed
+   ```
+
+   Run `pnpm db:migrate` again whenever a new migration is added to `drizzle/`.
+3. **Resend:** add your domain and create the DNS records it lists (SPF, DKIM, optionally DMARC) at your domain registrar. Once it shows *Verified*, set `EMAIL_FROM` to an address on that domain.
+4. **R2:** follow [Cloudflare R2](#cloudflare-r2-x-rays-and-files) above, and add your production domain to the CORS `AllowedOrigins`.
+5. **Vercel:** import the Git repository (framework Next.js, install command `pnpm install`). Add every variable from `.env.example` under *Settings → Environment Variables*, with `BETTER_AUTH_URL=https://yourdomain.com`, then deploy.
+6. **Domain:** Vercel → *Settings → Domains* → add `yourdomain.com` and follow its DNS instructions. HTTPS is automatic.
+7. **Reminders:** `vercel.json` schedules `/api/cron/reminders` daily at 00:00 UTC (8:00 AM Manila), and Vercel sends `CRON_SECRET` with each call. To trigger it by hand:
+
+   ```bash
+   curl -H "Authorization: Bearer $CRON_SECRET" https://yourdomain.com/api/cron/reminders
+   ```
+
+**Plans and limits**
+
+- Vercel **Hobby is for non-commercial use** and only allows **daily** crons. It's fine for the pilot. Before charging any dentist, move to **Pro** ($20/mo). Then you can switch the cron to hourly (`"0 * * * *"`) and set `REMINDER_SLACK_HOURS=0`.
+- Neon free tier: 0.5 GB, plenty for text records. Backups come from Neon point-in-time restore, plus *Settings → Export your data* for your own CSV copies.
+- R2 free tier: 10 GB of files, with no charge for downloads.
+
+## Testing
+
+- `pnpm test`: unit and data-layer tests. Each test file gets its own in-memory database, so no setup is needed.
+- `pnpm test:e2e`: the full browser flow in `e2e/`. It starts its own dev server on port 3100 with a fresh database, so stop `pnpm dev` first. The first time, run `pnpm exec playwright install chromium`. On Windows, run it from PowerShell or cmd, not Git Bash.
 
 ## Documentation
 

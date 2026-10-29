@@ -10,6 +10,10 @@ const globalForDb = globalThis as unknown as { dentalkeepDb?: DbHandle };
 export function getDbHandle(): DbHandle {
   if (!globalForDb.dentalkeepDb) {
     const e = env();
+    if (e.NODE_ENV === "production" && !e.DATABASE_URL) {
+      // The embedded database is for development and tests only.
+      throw new Error("DATABASE_URL is required in production");
+    }
     globalForDb.dentalkeepDb = createDb({ databaseUrl: e.DATABASE_URL, pgliteDir: e.PGLITE_DATA_DIR });
   }
   return globalForDb.dentalkeepDb;
