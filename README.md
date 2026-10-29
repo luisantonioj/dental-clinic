@@ -37,6 +37,8 @@ pnpm db:seed                    # create the first admin account
 pnpm dev                        # http://localhost:3000
 ```
 
+**No accounts yet?** Leave `DATABASE_URL` empty and the app uses an embedded Postgres ([PGlite](https://pglite.dev)) stored in `./.pglite`. Tests always use a fresh in-memory PGlite database. Leave the Resend variables empty and emails are printed to the server console instead of sent.
+
 ### Environment variables
 
 | Variable | Where to get it |
