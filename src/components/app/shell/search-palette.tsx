@@ -72,9 +72,10 @@ export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenCha
           </div>
           <Command.List className="max-h-[min(420px,60vh)] overflow-y-auto p-2">
             {term && !loading && results.length === 0 && (
-              <Command.Empty className="px-3 py-6 text-center text-sm text-muted-foreground">
+              // Not cmdk's <Command.Empty>: it hides itself while the shortcut items below exist.
+              <p role="status" className="px-3 py-6 text-center text-sm text-muted-foreground">
                 No patients match “{term}”.
-              </Command.Empty>
+              </p>
             )}
             {results.length > 0 && (
               <Command.Group heading="Patients" className="text-xs [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-muted-foreground">
