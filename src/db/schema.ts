@@ -1,7 +1,8 @@
 // Drizzle schema. TS keys are camelCase; the client is created with
 // `casing: "snake_case"`, so columns are snake_case in Postgres.
 // See docs/architecture.md for the full data model.
-import { boolean, index, integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { boolean, date, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
 const timestamps = {
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
@@ -110,6 +111,54 @@ export const workplaces = pgTable(
     ...timestamps,
   },
   (t) => [index().on(t.dentistId)],
+);
+
+// ── Patients ──────────────────────────────────────────────────────────────────
+
+export const SEXES = ["female", "male"] as const;
+export type Sex = (typeof SEXES)[number];
+
+export const patients = pgTable(
+  "patients",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    /** Per-dentist running number behind the code (P-0001). */
+    seq: integer().notNull(),
+    code: text().notNull(),
+    firstName: text().notNull(),
+    middleName: text(),
+    lastName: text().notNull(),
+    birthdate: date({ mode: "string" }),
+    sex: text().$type<Sex>(),
+    phone: text(),
+    email: text(),
+    address: text(),
+    occupation: text(),
+    emergencyName: text(),
+    emergencyPhone: text(),
+    emergencyRelation: text(),
+    allergies: text(),
+    medicalConditions: text(),
+    medications: text(),
+    notes: text(),
+    /** When the patient agreed to the privacy notice (Data Privacy Act). */
+    consentAt: timestamp({ withTimezone: true }),
+    remindersOptIn: boolean().notNull().default(false),
+    archivedAt: timestamp({ withTimezone: true }),
+    /** Lower-cased names, code and phone (also digits only) for fuzzy search. */
+    searchText: text().generatedAlwaysAs(
+      sql`lower(first_name || ' ' || coalesce(middle_name, '') || ' ' || last_name || ' ' || code || ' ' || coalesce(phone, '') || ' ' || regexp_replace(coalesce(phone, ''), '[^0-9]', '', 'g'))`,
+    ),
+    ...timestamps,
+  },
+  (t) => [
+    uniqueIndex().on(t.dentistId, t.seq),
+    index().on(t.dentistId, t.lastName, t.firstName),
+    index("patients_search_text_trgm_idx").using("gin", sql`${t.searchText} gin_trgm_ops`),
+  ],
 );
 
 // ── Audit ─────────────────────────────────────────────────────────────────────
