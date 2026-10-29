@@ -124,7 +124,7 @@ export function WeekCalendar({
                         style={workplaceColorVar(a.workplaceColor)}
                       >
                         <span className="h-9 w-1 flex-none rounded-full bg-(--c)" />
-                        <span className="tabular w-16 flex-none text-sm text-muted-foreground">{formatTime(new Date(a.startsAt))}</span>
+                        <span className="tabular w-20 flex-none text-sm whitespace-nowrap text-muted-foreground">{formatTime(new Date(a.startsAt))}</span>
                         <span className="min-w-0 flex-1">
                           <span className={cn("block truncate font-medium text-heading", a.status === "cancelled" && "line-through opacity-60")}>
                             {a.patientName}

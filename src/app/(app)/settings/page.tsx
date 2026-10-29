@@ -5,8 +5,10 @@ import { SectionCard } from "@/components/app/section-card";
 import { WorkplaceDot, workplaceTypeLabel } from "@/components/app/workplace-tag";
 import { Badge } from "@/components/ui/badge";
 import { requireUser } from "@/server/auth";
+import { listAudit } from "@/server/data/audit";
 import { getProfile } from "@/server/data/users";
 import { listWorkplaces } from "@/server/data/workplaces";
+import { ActivityList } from "./activity-list";
 import { PasswordForm } from "./password-form";
 import { ProfileForm } from "./profile-form";
 import { WorkplaceDialog } from "./workplace-dialog";
@@ -15,9 +17,10 @@ export const metadata: Metadata = { title: "Settings" };
 
 export default async function SettingsPage() {
   const actor = await requireUser();
-  const [profile, workplaces] = await Promise.all([
+  const [profile, workplaces, activity] = await Promise.all([
     getProfile(actor),
     listWorkplaces(actor, { includeInactive: true }),
+    listAudit(actor, 25),
   ]);
 
   return (
@@ -64,6 +67,13 @@ export default async function SettingsPage() {
 
         <SectionCard title="Password" description="Changing it signs you out on your other devices.">
           <PasswordForm />
+        </SectionCard>
+
+        <SectionCard
+          title="Activity log"
+          description={actor.role === "admin" ? "Recent changes across all accounts." : "Recent changes to your records."}
+        >
+          <ActivityList entries={activity} showActor={actor.role === "admin"} />
         </SectionCard>
       </div>
     </>

@@ -200,3 +200,13 @@ export async function countPatients(actor: Actor): Promise<number> {
     .where(and(ownedBy(actor, patients.dentistId), isNull(patients.archivedAt)));
   return total;
 }
+
+/** Most recently added or edited patients (dashboard). */
+export async function recentPatients(actor: Actor, limit = 6): Promise<PatientListItem[]> {
+  return db
+    .select(listColumns)
+    .from(patients)
+    .where(and(ownedBy(actor, patients.dentistId), isNull(patients.archivedAt)))
+    .orderBy(desc(patients.updatedAt))
+    .limit(limit);
+}
