@@ -4,7 +4,16 @@ import { desc, eq } from "drizzle-orm";
 import { auditLog, user } from "@/db/schema";
 import type { Actor } from "@/server/actor";
 
-export type AuditAction = "create" | "update" | "archive" | "restore" | "disable" | "enable" | "reset-password" | "delete";
+export type AuditAction =
+  | "create"
+  | "update"
+  | "archive"
+  | "restore"
+  | "disable"
+  | "enable"
+  | "reset-password"
+  | "delete"
+  | "export";
 
 /** Records who did what to which row. Called from data-layer writes. */
 export async function audit(

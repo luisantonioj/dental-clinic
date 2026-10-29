@@ -35,10 +35,11 @@ export function ActivityList({ entries, showActor }: { entries: AuditEntry[]; sh
       {entries.map((e) => {
         const entity = ENTITY_LABELS[e.entity] ?? e.entity;
         const action = ACTION_LABELS[e.action] ?? `${e.action} a`;
+        const what = e.action === "export" ? `exported all ${entity} records` : `${action} ${entity}`;
         return (
           <li key={e.id} className="flex items-baseline justify-between gap-3 py-2 text-sm">
             <span className="min-w-0 truncate">
-              {showActor ? <b className="font-medium text-heading">{e.actorName}</b> : "You"} {action} {entity}
+              {showActor ? <b className="font-medium text-heading">{e.actorName}</b> : "You"} {what}
             </span>
             <span className="tabular flex-none text-xs text-muted-foreground">{formatDateTime(e.at)}</span>
           </li>

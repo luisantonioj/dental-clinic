@@ -210,3 +210,14 @@ export async function recentPatients(actor: Actor, limit = 6): Promise<PatientLi
     .orderBy(desc(patients.updatedAt))
     .limit(limit);
 }
+
+/** Every patient (active and archived) for the CSV backup. */
+export async function exportPatients(actor: Actor): Promise<Patient[]> {
+  const rows = await db
+    .select()
+    .from(patients)
+    .where(ownedBy(actor, patients.dentistId))
+    .orderBy(asc(patients.seq));
+  await audit(actor, "export", "patient", "all", { count: rows.length });
+  return rows;
+}

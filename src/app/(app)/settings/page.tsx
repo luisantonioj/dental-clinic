@@ -8,7 +8,9 @@ import { requireUser } from "@/server/auth";
 import { listAudit } from "@/server/data/audit";
 import { getProfile } from "@/server/data/users";
 import { listWorkplaces } from "@/server/data/workplaces";
+import { todayManila } from "@/lib/format";
 import { ActivityList } from "./activity-list";
+import { ExportCard } from "./export-card";
 import { PasswordForm } from "./password-form";
 import { ProfileForm } from "./profile-form";
 import { WorkplaceDialog } from "./workplace-dialog";
@@ -68,6 +70,8 @@ export default async function SettingsPage() {
         <SectionCard title="Password" description="Changing it signs you out on your other devices.">
           <PasswordForm />
         </SectionCard>
+
+        <ExportCard month={todayManila().slice(0, 7)} />
 
         <SectionCard
           title="Activity log"
