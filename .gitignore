@@ -52,3 +52,6 @@ next-env.d.ts
 
 # local file storage used when R2 is not configured (dev only)
 /.uploads
+
+# end-to-end test database
+/.pglite-e2e
