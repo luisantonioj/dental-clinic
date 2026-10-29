@@ -18,6 +18,7 @@ export default async function PatientLayout({ children, params }: LayoutProps<"/
 
   const tabs: PatientTab[] = [
     { segment: "", label: "Overview" },
+    { segment: "chart", label: "Dental chart" },
     { segment: "treatments", label: "Treatments" },
   ];
 

@@ -222,7 +222,7 @@ export const chartEntries = pgTable(
       .references(() => patients.id),
     /** FDI number: 11–48 adult, 51–85 primary. */
     tooth: integer().notNull(),
-    surfaces: text().$type<Surface>().array().notNull().default(sql`'{}'::text[]`),
+    surfaces: text().array().$type<Surface[]>().notNull().default(sql`'{}'::text[]`),
     condition: text().$type<ChartCondition>().notNull(),
     status: text().$type<ChartStatus>().notNull().default("existing"),
     date: date({ mode: "string" }).notNull(),
