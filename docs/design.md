@@ -44,7 +44,7 @@ Each status colour also has a `-soft` variant (10–14% alpha) for badge backgro
 
 ## Theme
 
-- Light / dark / system toggle in the topbar, stored in a cookie so the server renders the right theme with no flash.
+- Light / dark / system toggle in the topbar, remembered per browser by `next-themes`. Its inline script sets `data-theme` before first paint, so there is no flash.
 - Dark mode is applied with `data-theme="dark"` on `<html>`. `system` follows `prefers-color-scheme`.
 - Dark mode drops most shadows and relies on the surface steps (`--bg` → `--surface` → `--surface-2`).
 
