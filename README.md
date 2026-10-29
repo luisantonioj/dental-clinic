@@ -13,7 +13,7 @@ Built first for one pilot dentist who works at a partner clinic and runs her own
 | Database | Neon Postgres via Drizzle ORM (`@neondatabase/serverless`) |
 | Auth | Better Auth (email + password, admin-created accounts) |
 | File storage | Cloudflare R2 (private bucket, presigned URLs) |
-| Email | Resend + React Email (appointment reminders, password reset) |
+| Email | Resend (appointment reminders, password reset); templates are plain TS functions |
 | Scheduler | Vercel Cron (hourly reminder job) |
 | Validation | Zod |
 | Tests | Vitest (data layer), Playwright (end-to-end) |

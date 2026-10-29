@@ -112,7 +112,7 @@ All IDs are `text` UUIDs (`crypto.randomUUID()`). Every domain table has `dentis
 ### Services
 - **Better Auth**: email/password, Drizzle adapter, `admin` plugin (roles, ban, create user), sign-up disabled for the public. Password reset via Resend.
 - **Cloudflare R2** via `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner`. Keys are `dentistId/patientId/uuid.ext`. Allowed types: jpg, png, webp, heic, pdf, dcm. Max 20 MB.
-- **Resend**: `EMAIL_FROM` on the verified domain. Templates are plain TSX rendered to HTML.
+- **Resend**: `EMAIL_FROM` on the verified domain. Templates are plain TypeScript functions returning escaped HTML + a text version (`src/server/email/templates.ts`). Without Resend configured, emails are printed to the server console.
 - **Reminder cron** (hourly, `vercel.json`): select `scheduled` appointments with `reminder_sent_at is null` and `starts_at` between now and now + the dentist's `reminder_hours`, where the patient has an email and `reminders_opt_in`. Send, then set `reminder_sent_at`.
 
 ## Environment variables
