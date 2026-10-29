@@ -234,6 +234,35 @@ export const chartEntries = pgTable(
   (t) => [index().on(t.patientId, t.tooth)],
 );
 
+// ── Appointments ──────────────────────────────────────────────────────────────
+
+export const APPOINTMENT_STATUSES = ["scheduled", "completed", "cancelled", "no_show"] as const;
+export type AppointmentStatus = (typeof APPOINTMENT_STATUSES)[number];
+
+export const appointments = pgTable(
+  "appointments",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    patientId: text()
+      .notNull()
+      .references(() => patients.id),
+    workplaceId: text()
+      .notNull()
+      .references(() => workplaces.id),
+    startsAt: timestamp({ withTimezone: true }).notNull(),
+    endsAt: timestamp({ withTimezone: true }).notNull(),
+    reason: text(),
+    notes: text(),
+    status: text().$type<AppointmentStatus>().notNull().default("scheduled"),
+    reminderSentAt: timestamp({ withTimezone: true }),
+    ...timestamps,
+  },
+  (t) => [index().on(t.dentistId, t.startsAt), index().on(t.patientId, t.startsAt), index().on(t.status, t.startsAt)],
+);
+
 // ── Files (X-rays, photos, documents) ─────────────────────────────────────────
 
 export const ATTACHMENT_KINDS = ["xray", "photo", "document"] as const;
