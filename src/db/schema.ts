@@ -82,6 +82,36 @@ export const verification = pgTable(
   (t) => [index().on(t.identifier)],
 );
 
+// ── Workplaces ────────────────────────────────────────────────────────────────
+
+export const WORKPLACE_TYPES = ["own", "partner"] as const;
+export type WorkplaceType = (typeof WORKPLACE_TYPES)[number];
+export const WORKPLACE_COLORS = ["indigo", "sky", "violet", "amber", "rose", "emerald"] as const;
+export type WorkplaceColor = (typeof WORKPLACE_COLORS)[number];
+
+/** Where a dentist works: their own clinic, or a partner clinic that pays a commission share. */
+export const workplaces = pgTable(
+  "workplaces",
+  {
+    id: text().primaryKey(),
+    dentistId: text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: text().notNull(),
+    address: text(),
+    phone: text(),
+    type: text().$type<WorkplaceType>().notNull(),
+    /** Her share of collections, 0–100. Always 100 for her own clinic. */
+    commissionPct: integer().notNull().default(100),
+    /** Partner clinics often take lab fees off the top before the split. */
+    deductLabFees: boolean().notNull().default(false),
+    color: text().$type<WorkplaceColor>().notNull().default("indigo"),
+    active: boolean().notNull().default(true),
+    ...timestamps,
+  },
+  (t) => [index().on(t.dentistId)],
+);
+
 // ── Audit ─────────────────────────────────────────────────────────────────────
 
 export const auditLog = pgTable(
