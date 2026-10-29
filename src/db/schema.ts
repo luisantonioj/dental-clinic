@@ -1,7 +1,7 @@
 // Drizzle schema. TS keys are camelCase; the client is created with
 // `casing: "snake_case"`, so columns are snake_case in Postgres.
 // See docs/architecture.md for the full data model.
-import { boolean, index, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, index, integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 const timestamps = {
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
@@ -80,4 +80,22 @@ export const verification = pgTable(
     ...timestamps,
   },
   (t) => [index().on(t.identifier)],
+);
+
+// ── Audit ─────────────────────────────────────────────────────────────────────
+
+export const auditLog = pgTable(
+  "audit_log",
+  {
+    id: text().primaryKey(),
+    actorId: text()
+      .notNull()
+      .references(() => user.id),
+    action: text().notNull(),
+    entity: text().notNull(),
+    entityId: text().notNull(),
+    details: jsonb().$type<Record<string, unknown>>(),
+    at: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index().on(t.actorId, t.at), index().on(t.entity, t.entityId)],
 );
