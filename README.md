@@ -49,6 +49,7 @@ pnpm dev                        # http://localhost:3000
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | Cloudflare → R2 → Manage API tokens (scope the token to this bucket only) |
 | `RESEND_API_KEY`, `EMAIL_FROM` | Resend dashboard; `EMAIL_FROM` like `DentalKeep <reminders@yourdomain.com>` |
 | `CRON_SECRET` | Any long random string; Vercel sends it to the cron route |
+| `REMINDER_SLACK_HOURS` | `24` with the daily cron on Vercel Hobby; `0` if you switch to an hourly cron on Pro |
 | `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME` | Used once by `pnpm db:seed` |
 
 ### Cloudflare R2 (X-rays and files)

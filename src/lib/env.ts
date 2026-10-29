@@ -22,6 +22,12 @@ const envSchema = z.object({
   RESEND_API_KEY: optional,
   EMAIL_FROM: optional,
   CRON_SECRET: optional,
+  /**
+   * Extra hours added to each dentist's reminder window. Vercel Hobby runs crons
+   * once a day, so the default 24 makes sure nothing falls between runs.
+   * Set to 0 with an hourly cron (Vercel Pro).
+   */
+  REMINDER_SLACK_HOURS: z.coerce.number().int().min(0).max(72).default(24),
 });
 
 export type Env = z.infer<typeof envSchema>;

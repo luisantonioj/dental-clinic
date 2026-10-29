@@ -10,7 +10,7 @@
   laptop)   │   Route handlers ────┘          │                              │
             │     /api/auth/*  (Better Auth)  ├──▶ src/server/storage.ts ──▶ Cloudflare R2 (private)
             │     /api/files/* (presign)      └──▶ src/server/email/*   ──▶ Resend ──▶ patient inbox
-            │     /api/cron/reminders ◀── Vercel Cron (hourly, CRON_SECRET)│
+            │     /api/cron/reminders ◀── Vercel Cron (daily, CRON_SECRET)  │
             │     /api/export/*  (CSV)                                     │
             └────────────────────────────────────────────────────────────────┘
  Browser ──── presigned PUT/GET (5 min) ─────────────────────────▶ Cloudflare R2
@@ -113,7 +113,7 @@ All IDs are `text` UUIDs (`crypto.randomUUID()`). Every domain table has `dentis
 - **Better Auth**: email/password, Drizzle adapter, `admin` plugin (roles, ban, create user), sign-up disabled for the public. Password reset via Resend.
 - **Cloudflare R2** via `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner`. Keys are `dentistId/patientId/uuid.ext`. Allowed types: jpg, png, webp, heic, pdf, dcm. Max 20 MB.
 - **Resend**: `EMAIL_FROM` on the verified domain. Templates are plain TypeScript functions returning escaped HTML + a text version (`src/server/email/templates.ts`). Without Resend configured, emails are printed to the server console.
-- **Reminder cron** (hourly, `vercel.json`): select `scheduled` appointments with `reminder_sent_at is null` and `starts_at` between now and now + the dentist's `reminder_hours`, where the patient has an email and `reminders_opt_in`. Send, then set `reminder_sent_at`.
+- **Reminder cron** (`vercel.json`, daily at 00:00 UTC = 8:00 AM Manila, because Vercel Hobby only allows daily crons): selects `scheduled` appointments with `reminder_sent_at is null` and `starts_at` between now and now + the dentist's `reminder_hours` + `REMINDER_SLACK_HOURS` (default 24, so nothing falls between daily runs), where the patient has an email and `reminders_opt_in`. Each appointment is claimed (`reminder_sent_at` set) before sending and released if the send fails. On Vercel Pro, switch the schedule to hourly (`0 * * * *`) and set `REMINDER_SLACK_HOURS=0`.
 
 ## Environment variables
 

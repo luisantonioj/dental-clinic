@@ -46,7 +46,7 @@ There is no receptionist role in v1.
 2. **New patient intake.** Patients → New → fill in details and medical history → tick privacy consent (and the reminder opt-in if they want emails) → save → lands on the patient page.
 3. **Chart and treatment.** Patient → Chart → click a tooth → choose surfaces and condition → save. Treatments → add procedure, teeth, workplace, fee and lab fee. The fee adds to the patient's balance.
 4. **Upload an X-ray.** Patient → Files → upload (or take a photo on a phone) → it appears in the grid → click to view full screen.
-5. **Book an appointment → reminder.** Appointments → click a slot (or "New") → pick the patient, workplace and time → save. About 24 hours before (configurable), the patient gets an email if they opted in. A manual "Send reminder now" is also available.
+5. **Book an appointment → reminder.** Appointments → click a slot (or "New") → pick the patient, workplace and time → save. The daily 8 AM reminder run emails patients who opted in and whose visit falls within the dentist's reminder window (default 24 hours, plus a day of look-ahead on the free plan). A manual "Send reminder now" is also available.
 6. **Take a payment.** Patient → Billing → Add payment (amount, method, who collected it) → print the receipt with that workplace's header.
 7. **Monthly earnings.** Earnings → pick a month → see each workplace side by side: her share, what the partner clinic still owes, expenses and net. Record a payout when the clinic pays her. Export CSV.
 8. **Inventory.** Inventory → choose a workplace → restock, record use or adjust. Items below their reorder level show on the dashboard.
