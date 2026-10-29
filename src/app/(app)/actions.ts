@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { type ActionResult, fail, ok } from "@/lib/action-result";
 import { requireUser } from "@/server/auth";
 import { WORKPLACE_COOKIE } from "@/server/current-workplace";
+import { fullName, searchPatients } from "@/server/data/patients";
 import { assertOwnWorkplace } from "@/server/data/workplaces";
 
 export async function selectWorkplaceAction(id: string): Promise<ActionResult> {
@@ -23,4 +24,26 @@ export async function selectWorkplaceAction(id: string): Promise<ActionResult> {
   });
   revalidatePath("/", "layout");
   return ok();
+}
+
+export type QuickSearchResult = {
+  id: string;
+  name: string;
+  code: string;
+  phone: string | null;
+  hasAllergies: boolean;
+};
+
+/** Ctrl+K palette search. */
+export async function quickSearchAction(q: string): Promise<QuickSearchResult[]> {
+  const actor = await requireUser();
+  const term = String(q ?? "").slice(0, 100);
+  const rows = await searchPatients(actor, term);
+  return rows.map((p) => ({
+    id: p.id,
+    name: fullName(p),
+    code: p.code,
+    phone: p.phone,
+    hasAllergies: Boolean(p.allergies),
+  }));
 }
