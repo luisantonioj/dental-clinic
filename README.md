@@ -127,7 +127,7 @@ mockup/           clickable HTML mockup used as the visual reference
    `neon.ts` and the gitignored `.neon` folder come from `neon init` and only describe Neon branch settings (new branches expire after 7 days). The app itself only needs `DATABASE_URL`. `neon deploy` (after `neon login`) is optional.
 3. **Resend:** add your domain and create the DNS records it lists (SPF, DKIM, optionally DMARC) at your domain registrar. Once it shows *Verified*, set `EMAIL_FROM` to an address on that domain.
 4. **R2:** follow [Cloudflare R2](#cloudflare-r2-x-rays-and-files) above, and add your production domain to the CORS `AllowedOrigins`.
-5. **Vercel:** import the Git repository (framework Next.js, install command `pnpm install`). Add every variable from `.env.example` under *Settings → Environment Variables*, with `BETTER_AUTH_URL=https://yourdomain.com`, then deploy.
+5. **Vercel:** import the Git repository (framework Next.js, install command `pnpm install`). Add every variable from `.env.example` under *Settings → Environment Variables*, with `BETTER_AUTH_URL=https://yourdomain.com`, then deploy. `vercel.json` pins functions to Singapore (`sin1`) so they sit next to the Neon database in `ap-southeast-1`; if you put the database in another region, change `regions` to match.
 6. **Domain:** Vercel → *Settings → Domains* → add `yourdomain.com` and follow its DNS instructions. HTTPS is automatic.
 7. **Reminders:** `vercel.json` schedules `/api/cron/reminders` daily at 00:00 UTC (8:00 AM Manila), and Vercel sends `CRON_SECRET` with each call. To trigger it by hand:
 
