@@ -35,6 +35,9 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 14,
     updateAge: 60 * 60 * 24,
+    // Keep the session in a signed cookie for 5 minutes so most page loads skip
+    // the session lookup. Trade-off: a revoked or banned session lasts up to 5 minutes.
+    cookieCache: { enabled: true, maxAge: 5 * 60 },
   },
   user: {
     additionalFields: {
