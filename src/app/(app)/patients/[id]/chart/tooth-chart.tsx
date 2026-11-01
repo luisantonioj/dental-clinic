@@ -213,7 +213,7 @@ function ToothPanel({
         <p className="text-sm text-muted-foreground">No findings for this tooth yet.</p>
       )}
 
-      <form key={formKey} onSubmit={form.onSubmit} className="grid gap-3 border-t pt-4">
+      <form method="post" key={formKey} onSubmit={form.onSubmit} className="grid gap-3 border-t pt-4">
         <FormError message={form.error} />
         <input type="hidden" name="patientId" value={patientId} />
         <input type="hidden" name="tooth" value={tooth} />
@@ -264,7 +264,7 @@ function ToothPanel({
             <Input id="chart-notes" name="notes" placeholder="e.g. Class II, advised filling" />
           </Field>
         </div>
-        <Button type="submit" disabled={form.pending}>
+        <Button type="submit" disabled={form.disabled}>
           <Plus aria-hidden="true" /> {form.pending ? "Saving…" : "Save to chart"}
         </Button>
       </form>

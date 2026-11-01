@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useHydrated } from "@/components/app/form";
 import { FormError } from "@/components/app/form-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ export function ForgotPasswordForm() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const hydrated = useHydrated();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,13 +37,13 @@ export function ForgotPasswordForm() {
         </p>
       </div>
       {!sent && (
-        <form onSubmit={onSubmit} className="flex flex-col gap-4">
+        <form method="post" onSubmit={onSubmit} className="flex flex-col gap-4">
           <FormError message={error} />
           <div className="grid gap-1.5">
             <Label htmlFor="email">Email</Label>
             <Input id="email" name="email" type="email" autoComplete="username" required className="h-10" />
           </div>
-          <Button type="submit" size="lg" className="h-10 w-full" disabled={pending}>
+          <Button type="submit" size="lg" className="h-10 w-full" disabled={pending || !hydrated}>
             {pending ? "Sending…" : "Send reset link"}
           </Button>
         </form>

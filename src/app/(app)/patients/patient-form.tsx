@@ -27,7 +27,7 @@ export function PatientForm({
   const v = (key: keyof Patient) => (patient?.[key] as string | null | undefined) ?? "";
 
   return (
-    <form onSubmit={form.onSubmit} className="grid gap-6" noValidate>
+    <form method="post" onSubmit={form.onSubmit} className="grid gap-6" noValidate>
       <FormError message={form.error} />
       <div className="grid gap-6 xl:grid-cols-2">
         <SectionCard title="Personal information">
@@ -138,7 +138,7 @@ export function PatientForm({
         <Button variant="outline" asChild>
           <Link href={cancelHref}>Cancel</Link>
         </Button>
-        <Button type="submit" size="lg" disabled={form.pending}>
+        <Button type="submit" size="lg" disabled={form.disabled}>
           {form.pending ? "Saving…" : patient ? "Save changes" : "Add patient"}
         </Button>
       </div>

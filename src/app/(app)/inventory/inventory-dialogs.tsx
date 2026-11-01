@@ -72,7 +72,7 @@ export function ItemDialog({
         </Button>
       )}
       <DialogContent>
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>{item ? "Edit item" : "Add item"}</DialogTitle>
             <DialogDescription>Stock is tracked separately for each workplace.</DialogDescription>
@@ -136,7 +136,7 @@ export function ItemDialog({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               Save
             </Button>
           </DialogFooter>
@@ -176,7 +176,7 @@ export function MovementDialog({ item, type, today }: { item: ItemView; type: ke
         <Icon aria-hidden="true" />
       </Button>
       <DialogContent className="sm:max-w-sm">
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>
               {copy.title} · {item.name}
@@ -213,7 +213,7 @@ export function MovementDialog({ item, type, today }: { item: ItemView; type: ke
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               {copy.verb}
             </Button>
           </DialogFooter>

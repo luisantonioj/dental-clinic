@@ -107,7 +107,7 @@ export function UploadDialog({ patientId, today }: { patientId: string; today: s
         <Upload aria-hidden="true" /> Upload
       </Button>
       <DialogContent>
-        <form onSubmit={onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>Upload file</DialogTitle>
             <DialogDescription>Stored privately. Only you can open it.</DialogDescription>

@@ -96,7 +96,7 @@ export function AppointmentFormDialog({
       }}
     >
       <DialogContent className="sm:max-w-lg">
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>{appointment ? "Edit appointment" : "New appointment"}</DialogTitle>
             <DialogDescription>Times are Philippine time.</DialogDescription>
@@ -156,7 +156,7 @@ export function AppointmentFormDialog({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               {form.pending ? "Saving…" : appointment ? "Save" : "Book"}
             </Button>
           </DialogFooter>
