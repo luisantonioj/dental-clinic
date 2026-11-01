@@ -5,15 +5,15 @@ import { makeActor } from "../../../tests/support/factories";
 import { addPartnerClinic, addWorkplace } from "../../../tests/support/fixtures";
 import { addMovement, createItem, listItems, listMovements, lowStockItems, updateItem } from "./inventory";
 
-const move = (itemId: string, type: string, qty: string) =>
-  movementSchema.parse({ itemId, type, qty, date: "2026-10-29" });
+const DAY = "2026-10-29";
+const move = (itemId: string, type: string, qty: string) => movementSchema.parse({ itemId, type, qty, date: DAY });
 
 describe("inventory", () => {
   it("tracks stock per workplace from movements", async () => {
     const a = await makeActor();
     const home = await addWorkplace(a);
     const partner = await addPartnerClinic(a);
-    const gloves = await createItem(a, itemSchema.parse({ workplaceId: home.id, name: "Gloves (M)", unit: "box", reorderLevel: "2" }), 5);
+    const gloves = await createItem(a, itemSchema.parse({ workplaceId: home.id, name: "Gloves (M)", unit: "box", reorderLevel: "2" }), 5, DAY);
     await createItem(a, itemSchema.parse({ workplaceId: partner.id, name: "Composite A2", unit: "pc", reorderLevel: "1" }), 3);
 
     await addMovement(a, move(gloves, "use", "2"));

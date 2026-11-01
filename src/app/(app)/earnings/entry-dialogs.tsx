@@ -59,7 +59,7 @@ function EntryDialog({
         <Plus aria-hidden="true" /> {kind === "payout" ? "Record payout" : "Add expense"}
       </Button>
       <DialogContent>
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>{kind === "payout" ? "Record payout" : "Add expense"}</DialogTitle>
             <DialogDescription>
@@ -115,7 +115,7 @@ function EntryDialog({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               Save
             </Button>
           </DialogFooter>

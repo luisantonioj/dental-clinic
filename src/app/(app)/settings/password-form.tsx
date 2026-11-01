@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Field } from "@/components/app/form";
+import { Field, useHydrated } from "@/components/app/form";
 import { FormError } from "@/components/app/form-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { authClient } from "@/lib/auth-client";
 export function PasswordForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const hydrated = useHydrated();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -38,7 +39,7 @@ export function PasswordForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
+    <form method="post" onSubmit={onSubmit} className="grid gap-4">
       <FormError message={error} />
       <Field label="Current password" htmlFor="currentPassword">
         <Input id="currentPassword" name="currentPassword" type="password" autoComplete="current-password" required />
@@ -52,7 +53,7 @@ export function PasswordForm() {
         </Field>
       </div>
       <div>
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending || !hydrated}>
           {pending ? "Saving…" : "Change password"}
         </Button>
       </div>

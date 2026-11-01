@@ -67,7 +67,7 @@ export function TreatmentDialog({
         </Button>
       )}
       <DialogContent className="sm:max-w-lg">
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>{treatment ? "Edit treatment" : "Add treatment"}</DialogTitle>
             <DialogDescription>The fee adds to the patient&apos;s balance.</DialogDescription>
@@ -147,7 +147,7 @@ export function TreatmentDialog({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               {form.pending ? "Saving…" : "Save"}
             </Button>
           </DialogFooter>

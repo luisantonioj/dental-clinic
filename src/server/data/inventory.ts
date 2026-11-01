@@ -2,6 +2,7 @@ import "server-only";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { inventoryItems, stockMovements, type WorkplaceColor, workplaces } from "@/db/schema";
+import { todayManila } from "@/lib/format";
 import type { ItemInput, MovementInput } from "@/lib/validation/inventory";
 import { type Actor, NotFoundError, ownedBy } from "@/server/actor";
 import { audit } from "./audit";
@@ -107,7 +108,7 @@ export async function createItem(actor: Actor, input: ItemInput, openingStock = 
         id: crypto.randomUUID(),
         dentistId: actor.id,
         itemId: id,
-        date: today ?? new Date().toISOString().slice(0, 10),
+        date: today ?? todayManila(),
         qty: openingStock,
         type: "adjust",
         reason: "Opening stock",

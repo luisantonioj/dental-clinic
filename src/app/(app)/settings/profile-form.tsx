@@ -11,7 +11,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   const form = useFormAction(updateProfileAction, { successMessage: "Profile saved." });
 
   return (
-    <form onSubmit={form.onSubmit} className="grid gap-4">
+    <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
       <FormError message={form.error} />
       <Field label="Full name" htmlFor="name" error={form.fieldErrors.name} hint="As you want it on receipts, e.g. Dra. Maria Santos">
         <Input id="name" name="name" defaultValue={profile.name} required />
@@ -47,7 +47,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         Sign-in email: <span className="text-heading">{profile.email}</span>
       </p>
       <div>
-        <Button type="submit" disabled={form.pending}>
+        <Button type="submit" disabled={form.disabled}>
           {form.pending ? "Saving…" : "Save profile"}
         </Button>
       </div>

@@ -64,7 +64,7 @@ export function AddPaymentDialog({
         <Wallet aria-hidden="true" /> Add payment
       </Button>
       <DialogContent>
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>Add payment</DialogTitle>
             <DialogDescription>
@@ -132,7 +132,7 @@ export function AddPaymentDialog({
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               {form.pending ? "Saving…" : "Record payment"}
             </Button>
           </DialogFooter>
@@ -154,7 +154,7 @@ export function VoidPaymentButton({ paymentId, receiptNo }: { paymentId: string;
         <Ban aria-hidden="true" />
       </Button>
       <DialogContent>
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>Void {receiptNo}?</DialogTitle>
             <DialogDescription>
@@ -172,7 +172,7 @@ export function VoidPaymentButton({ paymentId, receiptNo }: { paymentId: string;
                 Keep it
               </Button>
             </DialogClose>
-            <Button type="submit" variant="destructive" disabled={form.pending}>
+            <Button type="submit" variant="destructive" disabled={form.disabled}>
               Void payment
             </Button>
           </DialogFooter>

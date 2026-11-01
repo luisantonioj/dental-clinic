@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useHydrated } from "@/components/app/form";
 import { FormError } from "@/components/app/form-error";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,6 +15,7 @@ export function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const hydrated = useHydrated();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +37,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form method="post" onSubmit={onSubmit} className="flex flex-col gap-4">
       <div>
         <h1 className="text-[26px] font-semibold tracking-tight">Sign in</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">Welcome back. Sign in to your practice.</p>
@@ -66,7 +68,7 @@ export function LoginForm() {
         <Checkbox name="remember" defaultChecked />
         Keep me signed in on this device
       </label>
-      <Button type="submit" size="lg" className="h-10 w-full" disabled={pending}>
+      <Button type="submit" size="lg" className="h-10 w-full" disabled={pending || !hydrated}>
         {pending ? "Signing in…" : "Sign in"}
       </Button>
       <p className="text-center text-xs text-muted-foreground">Accounts are created by your administrator.</p>

@@ -43,7 +43,7 @@ export function NewDentistButton() {
         <Plus aria-hidden="true" /> New dentist
       </Button>
       <DialogContent>
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>New dentist account</DialogTitle>
             <DialogDescription>They sign in with this email and temporary password.</DialogDescription>
@@ -77,7 +77,7 @@ export function NewDentistButton() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               {form.pending ? "Creating…" : "Create account"}
             </Button>
           </DialogFooter>
@@ -129,7 +129,7 @@ export function AccountActions({ id, name, disabled }: { id: string; name: strin
         }}
       >
         <DialogContent>
-          <form onSubmit={reset.onSubmit} className="grid gap-4">
+          <form method="post" onSubmit={reset.onSubmit} className="grid gap-4">
             <DialogHeader>
               <DialogTitle>Reset password</DialogTitle>
               <DialogDescription>Set a new temporary password for {name}. They will be signed out.</DialogDescription>
@@ -145,7 +145,7 @@ export function AccountActions({ id, name, disabled }: { id: string; name: strin
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={reset.pending}>
+              <Button type="submit" disabled={reset.disabled}>
                 {reset.pending ? "Saving…" : "Set password"}
               </Button>
             </DialogFooter>

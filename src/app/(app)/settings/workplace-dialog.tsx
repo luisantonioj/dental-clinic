@@ -54,7 +54,7 @@ export function WorkplaceDialog({ workplace }: { workplace?: Workplace }) {
         </Button>
       )}
       <DialogContent>
-        <form onSubmit={form.onSubmit} className="grid gap-4">
+        <form method="post" onSubmit={form.onSubmit} className="grid gap-4">
           <DialogHeader>
             <DialogTitle>{workplace ? "Edit workplace" : "Add workplace"}</DialogTitle>
             <DialogDescription>Appointments, treatments, payments and stock are tagged with a workplace.</DialogDescription>
@@ -177,7 +177,7 @@ export function WorkplaceDialog({ workplace }: { workplace?: Workplace }) {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={form.pending}>
+            <Button type="submit" disabled={form.disabled}>
               {form.pending ? "Saving…" : "Save"}
             </Button>
           </DialogFooter>
