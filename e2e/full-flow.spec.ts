@@ -173,8 +173,12 @@ test("a dentist's day, end to end, and another dentist can't see it", async ({ p
     await expect(page.getByText("No patients match")).toBeVisible();
     await page.keyboard.press("Escape");
 
-    const res = await page.goto(patientUrl);
-    expect(res?.status()).toBe(404);
+    // The page streams behind loading.tsx, so the status is already 200 when
+    // notFound() runs; check what renders instead.
+    await page.goto(patientUrl);
+    await expect(page.getByText("This page could not be found.")).toBeVisible();
+    await expect(page.getByText("Dela Cruz")).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"][content="noindex"]').first()).toBeAttached();
     const file = await page.request.get(fileUrl);
     expect(file.status()).toBe(404);
   });
